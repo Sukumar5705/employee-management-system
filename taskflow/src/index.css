@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables ───────────────────────────── */
+:root {
+  --color-bg:      #0a0a0f;
+  --color-surface: #13131a;
+  --color-border:  rgba(255, 255, 255, 0.07);
+  --color-accent:  #6c63ff;
+  --color-accent2: #00e5be;
+  --color-text:    #ffffff;
+  --color-muted:   #666666;
+}
+
+/* ── Base Reset ──────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #0a0a0f;
+  color: #ffffff;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: #0a0a0f;
+}
+
+/* ── Button base — keep cursor, DON'T strip border/background ── */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ── Input / Select / Textarea resets ───────── */
+input, select, textarea {
+  font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* ── Select dropdown dark theme ─────────────── */
+select option {
+  background-color: #13131a;
+  color: #ffffff;
+}
+
+/* ── Scrollbar — task list hidden ────────────── */
+#tasklist::-webkit-scrollbar { display: none; }
+#tasklist { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Scrollbar — global thin ─────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: #2a2a3a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+/* ── Transition easing ───────────────────────── */
+*, *::before, *::after {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
