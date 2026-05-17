@@ -34,25 +34,53 @@ const AuthProvider = ({ children }) => {
     restore();
   }, []);
 
-  const login = useCallback(async (email, password) => {
-    setApiError(null);
-    try {
-      const res              = await authAPI.login(email, password);
-      const { token, user: userData } = res.data;
-      const role             = userData.role;
-      localStorage.setItem('tf_token',   token);
-      localStorage.setItem('tf_session', JSON.stringify({ role }));
-      setLoggedInUserData(userData);
-      setUser(role);   // ← this sets 'hr', 'manager', 'admin', or 'employee'
-      if (['admin', 'hr', 'manager'].includes(role)) {
+const login = useCallback(async (email, password) => {
+  setApiError(null);
+
+  try {
+    console.log("STEP 1: calling login API");
+
+    const res = await authAPI.login(email, password);
+
+    console.log("STEP 2: login success", res.data);
+
+    const { token, user: userData } = res.data;
+
+    const role = userData.role;
+
+    localStorage.setItem('tf_token', token);
+    localStorage.setItem('tf_session', JSON.stringify({ role }));
+
+    setLoggedInUserData(userData);
+    setUser(role);
+
+    console.log("STEP 3: user stored");
+
+    if (['admin', 'hr', 'manager'].includes(role)) {
+      try {
+        console.log("STEP 4: fetching employees");
+
         const empRes = await employeeAPI.all();
+
+        console.log("STEP 5: employees fetched", empRes.data);
+
         setUserData({ employees: empRes.data.employees });
+
+      } catch (err) {
+        console.error("EMPLOYEE FETCH ERROR:", err.response?.data || err.message);
       }
-    } catch (err) {
-      const msg = err.response?.data?.error || 'Invalid credentials';
-      throw new Error(msg);
     }
-  }, []);
+
+    console.log("STEP 6: login flow completed");
+
+  } catch (err) {
+    console.error("LOGIN ERROR:", err.response?.data || err.message);
+
+    const msg = err.response?.data?.error || 'Invalid credentials';
+
+    throw new Error(msg);
+  }
+}, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('tf_token');
