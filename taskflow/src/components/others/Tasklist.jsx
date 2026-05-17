@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
-import AcceptTasklist    from './AcceptTasklist';
+import AcceptTasklist    from './AcceptTaskList';
 import NewTaskList       from './NewTaskList';
 import CompleteTaskList  from './CompleteTaskList';
-import FailedTaskList    from './FailedTaskList';
+import FailedTaskList    from './FailedTasklist';
 
 const FILTERS = ['all', 'new', 'active', 'completed', 'failed'];
 const FILTER_STYLES = {
