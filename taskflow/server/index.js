@@ -26,19 +26,19 @@ app.use(cors({
   credentials: true
 }));
 
-app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
-app.use('/api/auth/', rateLimit({ windowMs: 15 * 60 * 1000, max: 15 }));
+app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
+app.use('/api/v1/auth/', rateLimit({ windowMs: 15 * 60 * 1000, max: 15 }));
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-app.use('/api/auth',        authRoutes);
-app.use('/api/tasks',       taskRoutes);
-app.use('/api/employees',   employeeRoutes);
-app.use('/api/performance', performanceRoutes);
+app.use('/api/v1/auth',        authRoutes);
+app.use('/api/v1/tasks',       taskRoutes);
+app.use('/api/v1/employees',   employeeRoutes);
+app.use('/api/v1/performance', performanceRoutes);
 
-app.get('/api/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+app.get('/api/v1/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 app.use(errorHandler);
 
