@@ -5,7 +5,8 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
 import employeeRoutes from './routes/employees.js';
@@ -47,6 +48,7 @@ app.use(
     credentials: true,
   })
 );
+
 
 // -----------------------------
 // Rate Limiting
@@ -108,7 +110,11 @@ app.get('/api/v1/health', (_, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-
+app.use(
+  '/api/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 // -----------------------------
 // 404 Handler
 // -----------------------------
