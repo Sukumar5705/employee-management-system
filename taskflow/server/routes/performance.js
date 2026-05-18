@@ -5,6 +5,22 @@ import { protect, restrictTo } from '../middleware/auth.js';
 const router = express.Router();
 router.use(protect, restrictTo('admin', 'hr', 'manager'));
 
+
+
+/**
+ * @swagger
+ * /performance:
+ *   get:
+ *     summary: Get organization performance analytics
+ *     tags: [Performance]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Performance analytics fetched successfully
+ *       403:
+ *         description: Access denied
+ */
 // GET /api/performance — full performance data for all employees
 router.get('/', async (req, res, next) => {
   try {
@@ -86,6 +102,27 @@ router.get('/', async (req, res, next) => {
     res.json({ summary, employees: report });
   } catch (err) { next(err); }
 });
+
+/**
+ * @swagger
+ * /performance/{id}:
+ *   get:
+ *     summary: Get employee performance by ID
+ *     tags: [Performance]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee performance fetched successfully
+ *       404:
+ *         description: Employee not found
+ */
 
 // GET /api/performance/:id — single employee deep performance
 router.get('/:id', async (req, res, next) => {
