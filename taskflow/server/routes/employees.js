@@ -5,6 +5,22 @@ import { protect, restrictTo } from '../middleware/auth.js';
 const router = express.Router();
 router.use(protect);
 
+
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     summary: Get all employees
+ *     tags: [Employees]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Employees fetched successfully
+ *       403:
+ *         description: Access denied
+ */
+
 // GET /api/employees — admin, hr, manager can view all employees
 router.get('/', restrictTo('admin', 'hr', 'manager'), async (req, res, next) => {
   try {
@@ -22,6 +38,27 @@ router.get('/', restrictTo('admin', 'hr', 'manager'), async (req, res, next) => 
   } catch (err) { next(err); }
 });
 
+
+/**
+ * @swagger
+ * /employees/{id}:
+ *   get:
+ *     summary: Get employee by ID
+ *     tags: [Employees]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Employee fetched successfully
+ *       404:
+ *         description: Employee not found
+ */
 // GET /api/employees/:id — detail view
 router.get('/:id', restrictTo('admin', 'hr', 'manager'), async (req, res, next) => {
   try {
