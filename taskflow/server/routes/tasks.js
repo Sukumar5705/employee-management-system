@@ -5,6 +5,22 @@ import { protect, restrictTo } from '../middleware/auth.js';
 const router = express.Router();
 router.use(protect);
 
+
+/**
+ * @swagger
+ * /tasks/my:
+ *   get:
+ *     summary: Get logged-in employee tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Tasks fetched successfully
+ *       401:
+ *         description: Unauthorized
+ */
+
 // GET /api/tasks/my — employee's own tasks + stats
 router.get('/my', async (req, res, next) => {
   try {
@@ -12,6 +28,37 @@ router.get('/my', async (req, res, next) => {
     res.json({ tasks: user.tasks, stats: user.taskStats });
   } catch (err) { next(err); }
 });
+
+/**
+ * @swagger
+ * /tasks/{taskId}/status:
+ *   patch:
+ *     summary: Update task status
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 example: completed
+ *     responses:
+ *       200:
+ *         description: Task updated successfully
+ *       404:
+ *         description: Task not found
+ */
 
 // PATCH /api/tasks/:taskId/status — employee updates own task
 router.patch('/:taskId/status', async (req, res, next) => {
@@ -34,6 +81,19 @@ router.patch('/:taskId/status', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     summary: Get all employees
+ *     tags: [Employees]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Employee list fetched successfully
+ */
+
 // POST /api/tasks — admin/manager creates task for employee
 router.post('/', restrictTo('admin', 'manager'), async (req, res, next) => {
   try {
@@ -51,6 +111,33 @@ router.post('/', restrictTo('admin', 'manager'), async (req, res, next) => {
     res.status(201).json({ message: 'Task created', stats: employee.taskStats });
   } catch (err) { next(err); }
 });
+
+
+/**
+ * @swagger
+ * /tasks/{employeeId}/{taskId}:
+ *   delete:
+ *     summary: Delete a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: employeeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       404:
+ *         description: Employee not found
+ */
 
 // DELETE /api/tasks/:employeeId/:taskId — admin/manager deletes task
 router.delete('/:employeeId/:taskId', restrictTo('admin', 'manager'), async (req, res, next) => {
